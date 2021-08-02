@@ -1,8 +1,11 @@
 from sqlalchemy import Column, String, create_engine
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Integer
 import json
+import os
 
-database_path = os.environ['DATABASE_URL']
+#database_path = os.environ['DATABASE_URL']
+database_path = os.getenv('DATABASE_URL')
 
 db = SQLAlchemy()
 
