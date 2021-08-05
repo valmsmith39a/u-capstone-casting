@@ -38,6 +38,10 @@ class Movie(db.Model):
     def __repr__(self):
         return f'Movie: id({self.id}), title({self.title})'
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 '''
 Actor
