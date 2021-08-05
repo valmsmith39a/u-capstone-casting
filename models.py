@@ -1,3 +1,4 @@
+from typing import AsyncGenerator
 from sqlalchemy import Column, String, create_engine
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer
@@ -36,6 +37,23 @@ class Movie(db.Model):
 
     def __repr__(self):
         return f'Movie: id({self.id}), title({self.title})'
+
+
+'''
+Actor
+'''
+
+
+class Actor(db.Model):
+    __tablename__ = 'actors'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120))
+    age = db.Column(db.String(120))
+    gender = db.Column(db.String(120))
+
+    def __repr__(self):
+        return f'Actor: id({self.id}), name({self.name})'
 
 
 '''
