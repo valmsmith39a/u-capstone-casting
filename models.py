@@ -34,6 +34,10 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     release_date = db.Column(db.String(120))
+    
+    def __init__(self, title, release_date):
+        self.title = title
+        self.release_date = release_date
 
     def __repr__(self):
         return f'Movie: id({self.id}), title({self.title})'
@@ -41,6 +45,20 @@ class Movie(db.Model):
     def insert(self):
         db.session.add(self)
         db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+        
+    def format(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "release_date": self.release_date
+        }
 
 
 '''
@@ -59,6 +77,24 @@ class Actor(db.Model):
     def __repr__(self):
         return f'Actor: id({self.id}), name({self.name})'
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def format(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "gender": self.gender,
+            "age": self.age
+        }
 
 '''
 Person
