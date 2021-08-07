@@ -119,7 +119,36 @@ def create_app(test_config=None):
         
         except:
             abort(422)
-   
+    
+    @app.route("/actors/<int:actor_id>", methods=["PATCH"]) 
+    def update_actor(actor_id):
+        try:
+            if actor_id is None:
+                abort(404)
+            
+            actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+            print('actor', actor) 
+            new_actor_data = request.get_json()
+            
+            if "name" in new_actor_data:
+                new_name = new_actor_data["name"]
+                actor.name = new_name
+
+            if "age" in new_actor_data:
+                new_age = new_actor_data["age"]
+                actor.age = new_age
+            
+            if "gender" in new_actor_data:
+                new_gender = new_actor_data["gender"]
+                actor.gender = new_gender
+            
+            actor.update()
+            
+            return jsonify({"success": True, "actor": actor.format()})
+        
+        except:
+            abort(404)
+
     return app
 
 
