@@ -36,7 +36,8 @@ def create_app(test_config=None):
         })
 
     @app.route("/actors")
-    def get_actors():
+    @requires_auth("get:actors")
+    def get_actors(jwt):
         actors = format(Actor.query.all())
         return jsonify({
             "success": True,
@@ -45,7 +46,8 @@ def create_app(test_config=None):
         })
 
     @app.route("/movies/create", methods=["POST"])
-    def create_movie():
+    @requires_auth("post:movies")
+    def create_movie(jwt):
         new_movie = Movie(title='Cyberpunkerdoodle', release_date='1/1/2077')
         new_movie.insert()
         movies = format(Movie.query.all())
@@ -57,7 +59,8 @@ def create_app(test_config=None):
         })
 
     @app.route("/actors/create", methods=["POST"])
-    def create_actor():
+    @requires_auth("post:actors")
+    def create_actor(jwt):
         new_actor = Actor(name="funnie man", gender="M", age="29")
         new_actor.insert()
         actors = Actor.query.all()
@@ -68,7 +71,9 @@ def create_app(test_config=None):
         })
 
     @app.route("/movies/<int:movie_id>", methods=["DELETE"])
-    def delete_movie(movie_id):
+    @requires_auth("delete:movies")
+    def delete_movie(jwt, movie_id):
+        print('jwt', jwt)
         try:
             movie = Movie.query.filter(movie_id == Movie.id).one_or_none()
             movie.delete()
@@ -83,7 +88,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/actors/<int:actor_id>", methods=["DELETE"])
-    def delete_actor(actor_id):
+    @requires_auth("delete:actors")
+    def delete_actor(jwt, actor_id):
         try:
             actor = Actor.query.filter(actor_id == Actor.id).one_or_none()
             actor.delete()
@@ -99,7 +105,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/movies/<int:movie_id>", methods=["PATCH"])
-    def update_movie(movie_id):
+    @requires_auth("patch:movies")
+    def update_movie(jwt, movie_id):
         try:
             if movie_id is None:
                 abort(404)
@@ -123,7 +130,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route("/actors/<int:actor_id>", methods=["PATCH"])
-    def update_actor(actor_id):
+    @requires_auth("patch:actors")
+    def update_actor(jwt, actor_id):
         try:
             if actor_id is None:
                 abort(404)
