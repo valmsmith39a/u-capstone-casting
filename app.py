@@ -54,7 +54,6 @@ def create_app(test_config=None):
         return jsonify({
             "success": True,
             "created": new_movie.format(),
-            "movies": movies,
             "total_movies": len(movies)
         })
 
@@ -81,7 +80,6 @@ def create_app(test_config=None):
             return jsonify({
                 "success": True,
                 "deleted": movie_id,
-                "movies": movies,
                 "total_movies": len(movies)
             })
         except:
@@ -97,7 +95,6 @@ def create_app(test_config=None):
             return jsonify({
                 "success": True,
                 "deleted": actor_id,
-                "actors": actors,
                 "total_actors": len(actors)
             })
 

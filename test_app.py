@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Movie, Actor
 
-CASTING_ASSISTANT = ("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InVrMFJJZzRiWVpVVW1nZklURzZXOCJ9.eyJpc3MiOiJodHRwczovL2Rldi13YW9peDFwOS51cy5hdXRoMC5jb20vIiwic3ViIjoiODZtN3dqSWxGVGJvNGFPNUlCQzZ4WGltbndFSkJpb1VAY2xpZW50cyIsImF1ZCI6ImNhc3RpbmciLCJpYXQiOjE2Mjg2NDUxNDUsImV4cCI6MTYyODczMTU0NSwiYXpwIjoiODZtN3dqSWxGVGJvNGFPNUlCQzZ4WGltbndFSkJpb1UiLCJzY29wZSI6InBvc3Q6YWN0b3JzIGRlbGV0ZTphY3RvcnMgcGF0Y2g6YWN0b3JzIHBhdGNoOm1vdmllcyBwb3N0Om1vdmllcyBkZWxldGU6bW92aWVzICBnZXQ6bW92aWVzIGdldDphY3RvcnMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJwZXJtaXNzaW9ucyI6WyJwb3N0OmFjdG9ycyIsImRlbGV0ZTphY3RvcnMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0Om1vdmllcyIsImRlbGV0ZTptb3ZpZXMgIiwiZ2V0Om1vdmllcyIsImdldDphY3RvcnMiXX0.oogXltKO-8OWezCE4DjjMsRiKuY1rqfue4pnINMBVNv1QJ1mKdyVEodG60_0AuTCf7429UdLV7Xx0aQFnPC4Qc2qKgIzochjMd_tdViyB9FZiepzINe6g91vJatqq7ZQ5TJoLeTS23IerpyCFWOVT_fhwyuIJ7MEpVaImJj5uDJNSGRNIhk668UK1-hBNUBVYZxoqrztk_33KVUykXOpUbK4De_QPvsPr_Auw5KystjsGzN9cbuXXYBqFeRLvhOuO2G4g6k7omq0YnWtDH2XU__fR6rLNYC_qkmEhH3HraciM0mwNKEasaVGImSnyfl_57COCI3ZxTKMWx0xXrglCw")
+CASTING_ASSISTANT = ("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InVrMFJJZzRiWVpVVW1nZklURzZXOCJ9.eyJpc3MiOiJodHRwczovL2Rldi13YW9peDFwOS51cy5hdXRoMC5jb20vIiwic3ViIjoiODZtN3dqSWxGVGJvNGFPNUlCQzZ4WGltbndFSkJpb1VAY2xpZW50cyIsImF1ZCI6ImNhc3RpbmciLCJpYXQiOjE2Mjk4NTgwNDQsImV4cCI6MTYyOTk0NDQ0NCwiYXpwIjoiODZtN3dqSWxGVGJvNGFPNUlCQzZ4WGltbndFSkJpb1UiLCJzY29wZSI6InBvc3Q6YWN0b3JzIGRlbGV0ZTphY3RvcnMgcGF0Y2g6YWN0b3JzIHBhdGNoOm1vdmllcyBwb3N0Om1vdmllcyBkZWxldGU6bW92aWVzICBnZXQ6bW92aWVzIGdldDphY3RvcnMiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJwZXJtaXNzaW9ucyI6WyJwb3N0OmFjdG9ycyIsImRlbGV0ZTphY3RvcnMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0Om1vdmllcyIsImRlbGV0ZTptb3ZpZXMgIiwiZ2V0Om1vdmllcyIsImdldDphY3RvcnMiXX0.CFo5a_5G8d5cyH05skS-rDjtp40GXBFsxFJToXE-chVowGFFBV-leCtGFfVqKc1rae3Awr6NKne2yaVkm_LzUrGLWTofycf7QyGBoaIrvdwGdae4TdCUfVDrfVCfgQJeBYt0qUxNMASinKoCrkiDnpJ6tmckPUtYgWXF3O7NaPqn6JuIXYLuufhhEkbDxRoXDQAD3JUJ1Q408mvfR1xD2meBqTVX_GCB_LlVLhrTbdEEnvS3b6QOTJBtnIT6jKK71Zy4p8-pqWZtAFfFUmhbvO-bpbudI_YFk6f1mmjOoQVmPXxr80vFrlykYY_i8PKfxU1qMQVB2wU7IOQ2ONgVfg")
 
 
 class CastingTestCase(unittest.TestCase):
@@ -48,8 +48,69 @@ class CastingTestCase(unittest.TestCase):
             "/movies", headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(len(data["movies"]))
+        self.assertTrue(data["total_movies"])
 
+    def test_get_actors(self):
+        res = self.client().get(
+            "/actors", headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(len(data["actors"]))
+        self.assertTrue(data["total_actors"])
 
-# Make tests executable
+    def test_create_movie(self):
+        res = self.client().post("/movies/create",
+                                 headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["created"])
+        self.assertTrue(data["total_movies"])
+
+    def test_create_actor(self):
+        res = self.client().post("/actors/create",
+                                 headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["created"])
+        self.assertTrue(data["total_actors"])
+
+    def test_delete_movie(self):
+        res = self.client().delete("/movies/2",
+                                   headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["total_movies"])
+
+    def test_delete_actor(self):
+        res = self.client().delete("/actors/2",
+                                   headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["total_actors"])
+
+    def test_patch_movie(self):
+        res = self.client().patch("/movies/2", json={"title": "patched title", "release_date": "1/1/2022"},
+                                  headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["movie"])
+
+    def test_patch_actor(self):
+        res = self.client().patch("/actors/1", json={"name": "patched name"},
+                                  headers={"Authorization": f'Bearer {CASTING_ASSISTANT}'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue(data["actor"])
+
+        # Make tests executable
 if __name__ == "__main__":
     unittest.main()
