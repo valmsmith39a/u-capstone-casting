@@ -28,46 +28,68 @@ def create_app(test_config=None):
     @app.route("/movies")
     @requires_auth("get:movies")
     def get_movies(jwt):
-        movies = format(Movie.query.all())
-        return jsonify({
-            "success": True,
-            "movies": movies,
-            "total_movies": len(movies)
-        })
+        try:
+            movies = format(Movie.query.all())
+            return jsonify({
+                "success": True,
+                "movies": movies,
+                "total_movies": len(movies)
+            })
+        except:
+            abort(422)
 
     @app.route("/actors")
     @requires_auth("get:actors")
     def get_actors(jwt):
-        actors = format(Actor.query.all())
-        return jsonify({
-            "success": True,
-            "actors": actors,
-            "total_actors": len(actors)
-        })
+        try:
+            actors = format(Actor.query.all())
+            return jsonify({
+                "success": True,
+                "actors": actors,
+                "total_actors": len(actors)
+            })
+        except:
+            abort(422)
 
     @app.route("/movies/create", methods=["POST"])
     @requires_auth("post:movies")
     def create_movie(jwt):
-        new_movie = Movie(title='Cyberpunkerdoodle', release_date='1/1/2077')
-        new_movie.insert()
-        movies = format(Movie.query.all())
-        return jsonify({
-            "success": True,
-            "created": new_movie.format(),
-            "total_movies": len(movies)
-        })
+        try:
+            body = request.get_json()
+            title = body.get("title", None)
+            release_date = body.get("release_date", None)
+
+            new_movie = Movie(title=title,
+                              release_date=release_date)
+            new_movie.insert()
+            movies = format(Movie.query.all())
+            return jsonify({
+                "success": True,
+                "created": new_movie.format(),
+                "total_movies": len(movies)
+            })
+        except:
+            abort(422)
 
     @app.route("/actors/create", methods=["POST"])
     @requires_auth("post:actors")
     def create_actor(jwt):
-        new_actor = Actor(name="funnie man", gender="M", age="29")
-        new_actor.insert()
-        actors = Actor.query.all()
-        return jsonify({
-            "success": True,
-            "created": new_actor.format(),
-            "total_actors": len(actors)
-        })
+        try:
+            body = request.get_json()
+            name = body.get("name", None)
+            gender = body.get("gender", None)
+            age = body.get("age", None)
+
+            new_actor = Actor(name=name, gender=gender, age=age)
+            new_actor.insert()
+            actors = Actor.query.all()
+            return jsonify({
+                "success": True,
+                "created": new_actor.format(),
+                "total_actors": len(actors)
+            })
+        except:
+            abort(422)
 
     @app.route("/movies/<int:movie_id>", methods=["DELETE"])
     @requires_auth("delete:movies")
@@ -153,6 +175,30 @@ def create_app(test_config=None):
 
         except:
             abort(404)
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "resource not found"
+        }), 404
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "bad request"
+        })
+
+    @app.errorhandler(422)
+    def not_processed(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "unprocessable"
+        })
 
     return app
 
