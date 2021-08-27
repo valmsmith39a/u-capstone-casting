@@ -4,7 +4,7 @@ from models import setup_db, Movie, Actor
 from flask_cors import CORS
 from utils import format
 
-from auth import requires_auth
+from auth import requires_auth, AuthError
 
 
 def create_app(test_config=None):
@@ -191,6 +191,20 @@ def create_app(test_config=None):
             "error": 422,
             "message": "unprocessable"
         })
+
+    @app.errorhandler(AuthError)
+    def auth_error(res):
+        error = jsonify(res.error)
+        status_code = res.status_code
+        return error, status_code
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "internal server error"
+        }), 500
 
     return app
 
