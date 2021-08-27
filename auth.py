@@ -39,14 +39,14 @@ def get_token_auth_header():
 def check_permissions(permission, payload):
     if "permissions" not in payload:
         raise AuthError(
-            {"code": "invalid_token", "description": "Permissions field not found"},
+            {"code": "unauthorized", "description": "Permissions field not found"},
             401
         )
 
     permissions = [permission.strip() for permission in payload["permissions"]]
 
     if permission not in permissions:
-        raise AuthError({"code": "invalid_token", "description": "User permission not found in permissions"
+        raise AuthError({"code": "unauthorized", "description": "User permission not found in permissions"
                          }, 401)
 
     return True
