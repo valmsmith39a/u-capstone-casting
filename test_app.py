@@ -133,23 +133,6 @@ class CastingTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "unprocessable")
 
-    # def test_422_unprocessable(self):
-    #     res=self.client().post('/questions', content_type='multipart/form-data',
-    #                              data={"question": "test", "answer": "test ans", "category": 1})
-    #     data=json.loads(res.data)
-    #     self.assertEqual(data["error"], 422)
-    #     self.assertEqual(data["success"], False)
-    #     self.assertEqual(data["message"], "unprocessable")
-
-    # def test_400_bad_request(self):
-    #     # trigger error with mispelling of "previous_questions"
-    #     res = self.client().post(
-    #         "/quizzes", json={"previous_question": [4], "quiz_category": {"type": "Geography", "id": 1}})
-    #     data = json.loads(res.data)
-    #     self.assertEqual(data["error"], 400)
-    #     self.assertEqual(data["success"], False)
-    #     self.assertEqual(data["message"], "bad request")
-
         # Make tests executable
 if __name__ == "__main__":
     unittest.main()
