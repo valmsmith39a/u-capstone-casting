@@ -30,8 +30,7 @@ class CastingTestCase(unittest.TestCase):
         self.new_actor = {
             "name": "John Wick",
             "age": "49",
-            "gender": "M",
-            "movie_id": 1
+            "gender": "M"
         }
 
         # bind app to current context
