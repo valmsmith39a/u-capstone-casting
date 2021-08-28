@@ -69,7 +69,12 @@ Response:
   "success": true,
   "total_movies": 3
 }
+
 ```
+
+##### To run unit tests:
+
+`python3 test_app.py`
 
 ### API Documentation
 
